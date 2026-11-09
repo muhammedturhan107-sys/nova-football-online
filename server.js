@@ -185,8 +185,9 @@ io.on("connection",socket=>{
   let x=Number(data?.x)||0,z=Number(data?.z)||0;
   const n=Math.hypot(x,z);
   if(n>1){x/=n;z/=n;}
-  p.x=Math.max(-18,Math.min(18,p.x+x*.38));
-  p.z=Math.max(-8,Math.min(8,p.z+z*.38));
+  const speed=data?.sprint===true?0.50:0.38;
+  p.x=Math.max(-18,Math.min(18,p.x+x*speed));
+  p.z=Math.max(-8,Math.min(8,p.z+z*speed));
  });
 
  socket.on("action",action=>{
@@ -196,6 +197,19 @@ io.on("connection",socket=>{
   if(!p)return;
   const b=r.ball;
   const d=Math.hypot(p.x-b.x,p.z-b.z);
+  if(action==="pass"&&b.owner===socket.id){
+   b.owner=null;
+   b.vx=p.team===0?0.95:-0.95;
+   b.vz=(Math.random()-.5)*.30;
+  }
+  if(action==="dribble"&&b.owner===socket.id){
+   const direction=p.team===0?1:-1;
+   p.x=Math.max(-18,Math.min(18,p.x+direction*1.15));
+   b.x=p.x+(p.team===0?.7:-.7);
+   b.z=p.z;
+   b.vx=0;
+   b.vz=0;
+  }
   if(action==="shoot"&&b.owner===socket.id){
    b.owner=null;
    b.vx=p.team===0?1.25:-1.25;

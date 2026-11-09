@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#07130f">
-<title>NOVA FOOTBALL ONLINE V7.1</title>
+<title>NOVA FOOTBALL ONLINE V8</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07130f;color:white;font-family:Arial,sans-serif;touch-action:none}
@@ -34,6 +34,12 @@ input,select{width:100%;padding:13px;background:#10271b;color:white;border:1px s
 #roomInfo{color:#a5ffbd;font-weight:bold;margin:12px}
 #rotate{display:none;position:fixed;z-index:20;inset:0;background:#07150e;align-items:center;justify-content:center;text-align:center;padding:25px}
 #exitBtn{position:fixed;z-index:4;left:10px;top:60px;width:auto;display:none;background:#263d31;color:white}
+
+/* NOVA_V8_FINAL */
+#novaV8Panel{padding:12px;margin:12px auto;background:#101b2b;color:white;border:1px solid #eab308;border-radius:12px}
+#novaV8Panel input{width:100%;box-sizing:border-box;padding:10px;margin:8px 0}
+#novaV8Panel button,.novaV8Btn{padding:11px;border:0;border-radius:10px;background:#eab308;color:#111;font-weight:900}
+.novaV8Btn{margin:4px;min-width:58px;min-height:45px;touch-action:manipulation}
 </style>
 </head>
 <body>
@@ -41,7 +47,7 @@ input,select{width:100%;padding:13px;background:#10271b;color:white;border:1px s
 <div id="rotate">📱<br><br>En iyi futbol deneyimi için cihazını yatay çevir.</div>
 
 <div id="top">
- <div class="info">NOVA V7.1<br><span id="connection">Bağlı</span></div>
+ <div class="info">NOVA V8<br><span id="connection">Bağlı</span></div>
  <div class="info" id="score">0 - 0</div>
  <div class="info">SÜRE<br><span id="timer">03:00</span></div>
  <div class="info">FPS <span id="fps">--</span></div>
@@ -63,7 +69,7 @@ input,select{width:100%;padding:13px;background:#10271b;color:white;border:1px s
 
 <div id="menu" class="panel">
  <div class="logo">NOVA FOOTBALL</div>
- <div class="sub">V7.1 GRAPHICS EDITION</div>
+ <div class="sub">V8 ULTIMATE EDITION</div>
  <button id="quick">⚡ HIZLI EŞLEŞME</button>
  <button id="create" class="secondary">＋ ODA OLUŞTUR</button>
  <input id="roomCode" maxlength="6" inputmode="numeric" placeholder="6 HANELİ ODA KODU">
@@ -89,9 +95,48 @@ input,select{width:100%;padding:13px;background:#10271b;color:white;border:1px s
   <button id="shoot">ŞUT ⚽</button>
  </div>
 </div>
-<div id="status">NOVA V7.1 yükleniyor...</div>
+<div id="status">NOVA V8 yükleniyor...</div>
 
-<script src="/socket.io/socket.io.js"></script>
+<script src="/socket.io/socket.io.js">
+/* NOVA V8 FINAL */
+let novaV8Sprint=false;
+const panel=document.createElement('div');
+panel.id='novaV8Panel';
+panel.innerHTML='<b>⚡ NOVA 165 FPS AKTİVASYONU</b><input id="novaV8Code" inputmode="numeric" placeholder="Aktivasyon kodu"><button id="novaV8Activate">AKTİF ET</button><p id="novaV8Info">Kod: 165</p>';
+const menu=document.getElementById('menu');
+if(menu)menu.appendChild(panel);
+if(localStorage.getItem('nova165Mode')==='1')document.getElementById('novaV8Info').textContent='Aktif';
+document.getElementById('novaV8Activate').onclick=()=>{
+ if(document.getElementById('novaV8Code').value.trim()!=='165'){
+  document.getElementById('novaV8Info').textContent='Kod hatalı.';
+  return;
+ }
+ localStorage.setItem('nova165Mode','1');
+ document.getElementById('novaV8Info').textContent='165 FPS hedef modu etkin.';
+ applyQuality();
+};
+function novaV8Button(label,action){
+ const root=document.querySelector('#controls .actions');
+ if(!root)return;
+ const b=document.createElement('button');
+ b.className='novaV8Btn';
+ b.textContent=label;
+ b.onclick=()=>{if(started)socket.emit('action',action)};
+ root.appendChild(b);
+}
+novaV8Button('PAS','pass');
+novaV8Button('ÇALIM','dribble');
+const sprintButton=document.createElement('button');
+sprintButton.className='novaV8Btn';
+sprintButton.textContent='DEPAR';
+sprintButton.onclick=()=>{
+ novaV8Sprint=!novaV8Sprint;
+ sprintButton.textContent=novaV8Sprint?'DEPAR AÇIK':'DEPAR';
+};
+const actionRoot=document.querySelector('#controls .actions');
+if(actionRoot)actionRoot.appendChild(sprintButton);
+/* NOVA V8 FINAL END */
+</script>
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 
@@ -127,7 +172,8 @@ function applyQuality(){
  quality=selected==='auto'?autoQuality():selected;
  const p=profiles[quality];
  if(renderer){
-  renderer.setPixelRatio(Math.min(devicePixelRatio||1,p.scale)*adaptiveScale);
+  const boost=localStorage.getItem('nova165Mode')==='1';
+  renderer.setPixelRatio(Math.min(devicePixelRatio||1,boost?Math.min(p.scale,.85):p.scale)*adaptiveScale);
   renderer.shadowMap.enabled=p.shadows;
   renderer.shadowMap.type=THREE.PCFSoftShadowMap;
   if(scene){
@@ -476,8 +522,26 @@ function formatTime(v){
  return String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0');
 }
 
+let novaV8Score=null;
+function novaV8Celebrate(){
+ const list=['GÜÇ POZU!','SAKİN KUTLAMA!','GENÇ YILDIZ!'];
+ let el=document.getElementById('novaV8Goal');
+ if(!el){
+  el=document.createElement('div');
+  el.id='novaV8Goal';
+  el.style.cssText='position:fixed;z-index:99999;top:35%;left:50%;transform:translateX(-50%);padding:20px;background:#101b2b;color:#ffdc55;border:2px solid #ffdc55;border-radius:16px;font-size:28px;font-weight:900;pointer-events:none';
+  document.body.appendChild(el);
+ }
+ el.textContent='⚽ '+list[Math.floor(Math.random()*list.length)];
+ el.style.display='block';
+ clearTimeout(window.novaV8GoalTimer);
+ window.novaV8GoalTimer=setTimeout(()=>el.style.display='none',2200);
+}
 function update(data){
  if(!data)return;
+ const score=JSON.stringify(data.score||[]);
+ if(novaV8Score!==null&&score!==novaV8Score)novaV8Celebrate();
+ novaV8Score=score;
  $('score').textContent=(data.score?.[0]||0)+' - '+(data.score?.[1]||0);
  $('timer').textContent=formatTime(data.remaining??180);
 
@@ -521,7 +585,7 @@ function update(data){
 function animate(now){
  requestAnimationFrame(animate);
  if(!renderer)return;
- const target=profiles[quality].fps;
+ const target=localStorage.getItem('nova165Mode')==='1'?165:profiles[quality].fps;
  if(now-lastFrame<1000/target)return;
  lastFrame=now;
 
@@ -685,7 +749,7 @@ base.addEventListener('pointercancel',reset);
 base.addEventListener('lostpointercapture',reset);
 
 setInterval(()=>{
- if(started)socket.emit('input',move);
+ if(started)socket.emit('input',{...move,sprint:novaV8Sprint});
 },50);
 
 $('rotate').style.display=innerHeight>innerWidth?'flex':'none';
