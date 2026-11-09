@@ -134,6 +134,31 @@ function init3D(){
  line(0,0,.1,22);
  const circle=new THREE.Mesh(new THREE.RingGeometry(2.9,3,.06,96),new THREE.MeshBasicMaterial({color:0xffffff,side:THREE.DoubleSide}));
  circle.rotation.x=-Math.PI/2;circle.position.y=.04;scene.add(circle);
+ // NOVA_STADIUM_V1: Ceza alanları ve penaltı noktaları
+ line(-11,0,.12,13);
+ line(-14,-6.5,6,.12);
+ line(-14,6.5,6,.12);
+ line(11,0,.12,13);
+ line(14,-6.5,6,.12);
+ line(14,6.5,6,.12);
+
+ for(const x of [-12,12]){
+  const spot=new THREE.Mesh(
+   new THREE.CircleGeometry(.12,20),
+   new THREE.MeshBasicMaterial({color:0xffffff})
+  );
+  spot.rotation.x=-Math.PI/2;
+  spot.position.set(x,.055,0);
+  scene.add(spot);
+ }
+
+ const centerSpot=new THREE.Mesh(
+  new THREE.CircleGeometry(.11,20),
+  new THREE.MeshBasicMaterial({color:0xffffff})
+ );
+ centerSpot.rotation.x=-Math.PI/2;
+ centerSpot.position.set(0,.055,0);
+ scene.add(centerSpot);
 
  function goal(x){
   const g=new THREE.Group();
@@ -145,6 +170,69 @@ function init3D(){
   bar.position.set(x,2.5,0);g.add(bar);scene.add(g);
  }
  goal(-17);goal(17);
+
+ // NOVA_STADIUM_V1: Tribünler
+ const standMat=new THREE.MeshStandardMaterial({
+  color:0x263b50,roughness:.9
+ });
+ const seatColors=[0x2878bd,0xe8e8e8,0x2878bd,0xe8e8e8];
+
+ for(const side of [-1,1]){
+  const stand=new THREE.Mesh(
+   new THREE.BoxGeometry(36,3,4),
+   standMat
+  );
+  stand.position.set(0,1.2,side*15);
+  scene.add(stand);
+
+  for(let row=0;row<4;row++){
+   for(let i=0;i<18;i++){
+    const seat=new THREE.Mesh(
+     new THREE.BoxGeometry(1.45,.45,.65),
+     new THREE.MeshStandardMaterial({
+      color:seatColors[(i+row)%seatColors.length]
+     })
+    );
+    seat.position.set(
+     -16+i*1.88,
+     2.1+row*.48,
+     side*(13.7+row*.85)
+    );
+    scene.add(seat);
+   }
+  }
+ }
+
+ for(const side of [-1,1]){
+  const stand=new THREE.Mesh(
+   new THREE.BoxGeometry(4,3,25),
+   standMat
+  );
+  stand.position.set(side*19,1.2,0);
+  scene.add(stand);
+ }
+
+ // Stadyum aydınlatma direkleri
+ const poleMat=new THREE.MeshStandardMaterial({color:0x64748b});
+ const lampMat=new THREE.MeshBasicMaterial({color:0xfff3c4});
+
+ for(const x of [-18,18]){
+  for(const z of [-12,12]){
+   const pole=new THREE.Mesh(
+    new THREE.CylinderGeometry(.12,.18,11,8),
+    poleMat
+   );
+   pole.position.set(x,5.5,z);
+   scene.add(pole);
+
+   const lamp=new THREE.Mesh(
+    new THREE.BoxGeometry(2,.35,.8),
+    lampMat
+   );
+   lamp.position.set(x,11,z);
+   scene.add(lamp);
+  }
+ }
 
  ball=new THREE.Mesh(new THREE.SphereGeometry(.48,24,18),new THREE.MeshStandardMaterial({color:0xffffff,roughness:.5}));
  ball.position.y=.5;ball.castShadow=true;
