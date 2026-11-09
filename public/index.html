@@ -3,79 +3,65 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#07150f">
-<title>NOVA FOOTBALL ONLINE V5</title>
+<meta name="theme-color" content="#07150e">
+<title>NOVA FOOTBALL ONLINE V6</title>
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07150f;color:white;font-family:Arial,sans-serif;touch-action:none}
-button,input{font:inherit}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07150e;color:white;font-family:Arial;touch-action:none}
 #game{position:fixed;inset:0}
-canvas{display:block;width:100%;height:100%}
-.panel{position:fixed;z-index:5;background:#07150fee;border:1px solid #ffffff22;border-radius:17px;padding:18px;box-shadow:0 12px 45px #0008}
-#menu{left:50%;top:50%;transform:translate(-50%,-50%);width:min(92%,390px);text-align:center}
-.logo{font-size:30px;font-weight:1000;letter-spacing:3px;color:#69ff9a}
-.sub{color:#a9c6b4;font-size:12px;margin:7px 0 20px}
-button{border:0;border-radius:11px;padding:13px;color:#07150f;background:#6cff9c;font-weight:900;width:100%;margin:5px 0;cursor:pointer}
-button.secondary{background:#203c2d;color:white;border:1px solid #ffffff25}
-button:disabled{opacity:.45}
-input{width:100%;padding:13px;border-radius:10px;background:#10271b;color:white;border:1px solid #ffffff30;text-align:center;margin:5px 0}
-#top{position:fixed;z-index:3;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;pointer-events:none;gap:8px}
-.info{background:#06140edc;border:1px solid #ffffff22;border-radius:10px;padding:9px 12px;font-size:12px}
-#score{font-size:22px;font-weight:900;color:#78ffa1}
-#settings{position:fixed;z-index:6;right:10px;top:60px;width:min(260px,85vw);display:none}
-#settings select{width:100%;padding:10px;background:#10271b;color:white;border:1px solid #ffffff33;border-radius:9px;margin:6px 0}
-#controls{position:fixed;z-index:4;inset:auto 0 18px;display:none;pointer-events:none}
-#stickBase{position:absolute;left:20px;bottom:5px;width:116px;height:116px;border-radius:50%;background:#ffffff20;border:2px solid #ffffff55;pointer-events:auto;touch-action:none}
-#stick{position:absolute;width:48px;height:48px;border-radius:50%;background:#80ffa5;left:32px;top:32px;box-shadow:0 3px 12px #0008}
-.actions{position:absolute;right:18px;bottom:8px;display:flex;gap:12px;pointer-events:auto}
-.actions button{width:72px;height:72px;border-radius:50%;margin:0;background:#76ffa0;font-size:12px}
-.actions button.secondary{background:#203c2d;color:white}
-#status{position:fixed;z-index:7;bottom:8px;left:50%;transform:translateX(-50%);background:#06140edc;padding:8px 12px;border-radius:9px;font-size:12px;white-space:nowrap}
-#fps{color:#aaffc0}
-#ready{display:none}
-#roomInfo{color:#9effb9;font-size:13px;margin:10px}
-#settingsBtn{position:fixed;z-index:8;right:10px;top:10px;width:auto;padding:10px 13px;margin:0;background:#10271b;color:white;border:1px solid #ffffff33}
-@media(orientation:portrait){#rotate{display:block}}
-#rotate{display:none;position:fixed;z-index:20;inset:0;background:#07150f;align-items:center;justify-content:center;text-align:center;padding:30px;font-size:20px}
+canvas{display:block}
+.panel{position:fixed;z-index:5;background:#07150fee;border:1px solid #ffffff25;border-radius:18px;padding:18px;box-shadow:0 10px 40px #0008}
+#menu{width:min(92%,390px);left:50%;top:50%;transform:translate(-50%,-50%);text-align:center}
+.logo{font-size:29px;font-weight:1000;letter-spacing:2px;color:#70ffa0}
+.sub{font-size:12px;color:#a9c6b4;margin:9px 0 18px}
+button{border:0;border-radius:11px;padding:13px;background:#70ffa0;color:#07150e;font-weight:900;width:100%;margin:5px 0}
+.secondary{background:#203d2d;color:white;border:1px solid #ffffff25}
+input,select{width:100%;padding:13px;background:#10271b;color:white;border:1px solid #ffffff35;border-radius:10px;margin:5px 0}
+#top{position:fixed;z-index:3;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;pointer-events:none;gap:5px}
+.info{background:#06140edc;border:1px solid #ffffff25;border-radius:10px;padding:9px;font-size:12px}
+#score{font-size:22px;font-weight:bold;color:#80ffa6}
+#settingsBtn{position:fixed;z-index:8;right:10px;top:60px;width:auto;background:#142b1d;color:white}
+#settings{display:none;right:10px;top:110px;width:min(270px,90vw)}
+#controls{display:none;position:fixed;z-index:4;inset:auto 0 15px}
+#stickBase{position:absolute;left:20px;bottom:5px;width:120px;height:120px;border-radius:50%;background:#ffffff20;border:2px solid #ffffff55;touch-action:none}
+#stick{position:absolute;left:34px;top:34px;width:48px;height:48px;border-radius:50%;background:#80ffa6}
+.actions{position:absolute;right:17px;bottom:9px;display:flex;gap:10px}
+.actions button{width:72px;height:72px;border-radius:50%;margin:0}
+#status{position:fixed;z-index:7;bottom:5px;left:50%;transform:translateX(-50%);background:#06140eeb;padding:8px 12px;border-radius:9px;font-size:12px;white-space:nowrap;max-width:95%;overflow:hidden}
+#rotate{display:none;position:fixed;z-index:20;inset:0;background:#07150e;align-items:center;justify-content:center;text-align:center;padding:25px}
 </style>
 </head>
 <body>
 <div id="game"></div>
-<div id="rotate">📱<br><br>En iyi oyun deneyimi için cihazını yatay çevir.</div>
-
+<div id="rotate">📱 Oyunu yatay ekranda oyna.</div>
 <div id="top">
- <div class="info">NOVA FOOTBALL V5<br><span id="connection">Bağlanıyor...</span></div>
+ <div class="info">NOVA FOOTBALL V6<br><span id="connection">Bağlanıyor...</span></div>
  <div class="info" id="score">0 - 0</div>
- <div class="info">FPS: <span id="fps">--</span></div>
+ <div class="info">FPS <span id="fps">--</span></div>
 </div>
-
 <button id="settingsBtn">⚙ Grafik</button>
-
 <div id="settings" class="panel">
  <b>GRAFİK AYARLARI</b>
  <select id="quality">
-  <option value="auto">Otomatik grafik</option>
-  <option value="lite">Lite – Eski cihazlar</option>
-  <option value="balanced">Dengeli – Orta seviye</option>
-  <option value="high">Yüksek – Güçlü cihazlar</option>
-  <option value="ultra">Ultra – Üst seviye</option>
+  <option value="auto">Otomatik</option>
+  <option value="lite">Lite</option>
+  <option value="balanced">Dengeli</option>
+  <option value="high">Yüksek</option>
+  <option value="ultra">Ultra</option>
  </select>
- <div id="qualityInfo" class="sub">Performans ayarları hazırlanıyor.</div>
+ <p class="sub" id="qinfo">Cihaza göre otomatik ayarlanır.</p>
  <button class="secondary" id="closeSettings">Kapat</button>
 </div>
-
 <div id="menu" class="panel">
  <div class="logo">NOVA FOOTBALL</div>
- <div class="sub">ONLINE FOOTBALL EXPERIENCE · V5</div>
+ <div class="sub">ONLINE FOOTBALL EXPERIENCE · V6</div>
  <button id="quick">⚡ HIZLI EŞLEŞME</button>
- <button class="secondary" id="create">＋ ÖZEL ODA OLUŞTUR</button>
- <input id="roomCode" maxlength="8" placeholder="ODA KODU">
- <button class="secondary" id="join">ODA KODUYLA KATIL</button>
- <div id="roomInfo"></div>
- <button id="ready">MAÇA HAZIRIM ⚽</button>
- <div class="sub">İki oyuncu da hazır olduğunda maç başlar.</div>
+ <button id="create" class="secondary">＋ ODA OLUŞTUR</button>
+ <input id="roomCode" maxlength="6" inputmode="numeric" placeholder="6 HANELİ ODA KODU">
+ <button id="join" class="secondary">ODA KODUYLA KATIL</button>
+ <div id="roomInfo" class="sub"></div>
+ <button id="ready" style="display:none">MAÇA HAZIRIM ⚽</button>
 </div>
-
 <div id="controls">
  <div id="stickBase"><div id="stick"></div></div>
  <div class="actions">
@@ -83,282 +69,190 @@ input{width:100%;padding:13px;border-radius:10px;background:#10271b;color:white;
   <button id="shoot">ŞUT ⚽</button>
  </div>
 </div>
-<div id="status">NOVA V5 yükleniyor...</div>
-
+<div id="status">NOVA V6 yükleniyor...</div>
 <script src="/socket.io/socket.io.js"></script>
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
-
 const $=id=>document.getElementById(id);
-const socket=io({transports:['websocket','polling']});
-let scene,camera,renderer,field,ball,players=[];
-let started=false,myId=null,roomCode='',lastState=null;
-let move={x:0,z:0},lastSend=0,lastRender=0,lastFps=performance.now(),frames=0;
-let currentQuality='auto',fpsValue=0,adaptiveScale=1;
-const objects=[];
-const colors=[0x22aaff,0xff5555];
-
-function status(t){$('status').textContent=t}
-function qualitySettings(q){
- const values={
-  lite:{scale:.72,fps:30,shadows:false,crowd:false,detail:0},
-  balanced:{scale:.9,fps:40,shadows:false,crowd:false,detail:1},
-  high:{scale:1.15,fps:60,shadows:false,crowd:true,detail:2},
-  ultra:{scale:1.4,fps:60,shadows:true,crowd:true,detail:3}
- };
- return values[q]||values.balanced;
-}
-function chooseQuality(){
- const saved=localStorage.getItem('nova_v5_quality')||'auto';
- if(saved!=='auto')return saved;
- const mem=navigator.deviceMemory||2;
- const cores=navigator.hardwareConcurrency||4;
- if(mem<=2||cores<=4)return 'lite';
- if(mem<=4||cores<=6)return 'balanced';
- return 'high';
+const socket=io();
+let scene,camera,renderer,ball,players=[],started=false,roomCode='';
+let move={x:0,z:0},lastFrame=0,frames=0,fpsTime=performance.now();
+let quality='lite',scale=1,lastState=null;
+const profiles={
+ lite:{scale:.72,fps:30,crowd:false},
+ balanced:{scale:.9,fps:40,crowd:false},
+ high:{scale:1.1,fps:60,crowd:true},
+ ultra:{scale:1.35,fps:60,crowd:true}
+};
+function say(t){$('status').textContent=t}
+function autoQuality(){
+ const ram=navigator.deviceMemory||2,cores=navigator.hardwareConcurrency||4;
+ return ram<=2||cores<=4?'lite':ram<=4?'balanced':'high';
 }
 function applyQuality(){
- currentQuality=$('quality').value;
- if(currentQuality==='auto')currentQuality=chooseQuality();
- const s=qualitySettings(currentQuality);
- if(renderer){
-  renderer.setPixelRatio(Math.min(devicePixelRatio||1,s.scale)*adaptiveScale);
-  renderer.shadowMap.enabled=s.shadows;
- }
- $('qualityInfo').textContent=
-  currentQuality.toUpperCase()+' · Hedef '+s.fps+' FPS · Çözünürlük '+s.scale+'x';
- localStorage.setItem('nova_v5_quality',$('quality').value);
+ const selected=$('quality').value;
+ quality=selected==='auto'?autoQuality():selected;
+ const p=profiles[quality];
+ if(renderer)renderer.setPixelRatio(Math.min(devicePixelRatio||1,p.scale)*scale);
+ $('qinfo').textContent=quality.toUpperCase()+' · '+p.fps+' FPS hedefi';
+ localStorage.setItem('novaV6Quality',selected);
 }
-$('quality').value=localStorage.getItem('nova_v5_quality')||'auto';
+$('quality').value=localStorage.getItem('novaV6Quality')||'auto';
 $('settingsBtn').onclick=()=>$('settings').style.display=$('settings').style.display==='block'?'none':'block';
 $('closeSettings').onclick=()=>$('settings').style.display='none';
 $('quality').onchange=applyQuality;
 
-function mat(color,roughness=1){return new THREE.MeshStandardMaterial({color,roughness})}
-function box(w,h,d,color,x,y,z){
- const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(color));
- m.position.set(x,y,z);scene.add(m);objects.push(m);return m;
-}
-function line(w,h,d,color,x,y,z){
- const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshBasicMaterial({color}));
+function addBox(w,h,d,color,x,y,z){
+ const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshLambertMaterial({color}));
  m.position.set(x,y,z);scene.add(m);return m;
 }
 function makePlayer(color){
  const g=new THREE.Group();
- const body=new THREE.Mesh(new THREE.CapsuleGeometry(.34,.55,3,6),mat(color));
- body.position.y=.75;g.add(body);
- const head=new THREE.Mesh(new THREE.SphereGeometry(.22,8,6),mat(0xffd1a1));
- head.position.y=1.35;g.add(head);
- const legMat=mat(0x17221b);
- for(let i=-1;i<=1;i+=2){
-  const leg=new THREE.Mesh(new THREE.BoxGeometry(.15,.48,.17),legMat);
-  leg.position.set(i*.13,.25,0);g.add(leg);
- }
+ const body=new THREE.Mesh(new THREE.CapsuleGeometry(.32,.55,3,6),new THREE.MeshLambertMaterial({color}));
+ body.position.y=.7;g.add(body);
+ const head=new THREE.Mesh(new THREE.SphereGeometry(.2,8,6),new THREE.MeshLambertMaterial({color:0xffd2ad}));
+ head.position.y=1.3;g.add(head);
  scene.add(g);return g;
 }
-function makeScene(){
- scene=new THREE.Scene();
- scene.background=new THREE.Color(0x78a9bd);
- scene.fog=new THREE.Fog(0x78a9bd,45,100);
- camera=new THREE.PerspectiveCamera(56,innerWidth/innerHeight,.1,150);
- camera.position.set(0,25,27);camera.lookAt(0,0,0);
- renderer=new THREE.WebGLRenderer({antialias:false,powerPreference:'low-power',alpha:false});
- renderer.outputColorSpace=THREE.SRGBColorSpace;
- renderer.toneMapping=THREE.NoToneMapping;
+function init(){
+ scene=new THREE.Scene();scene.background=new THREE.Color(0x8ab2c0);
+ camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,100);
+ camera.position.set(0,24,26);camera.lookAt(0,0,0);
+ renderer=new THREE.WebGLRenderer({antialias:false,powerPreference:'low-power'});
  renderer.shadowMap.enabled=false;
  $('game').appendChild(renderer.domElement);
- applyQuality();
-
  scene.add(new THREE.HemisphereLight(0xffffff,0x42634a,2));
- const sun=new THREE.DirectionalLight(0xffffff,1.1);
- sun.position.set(-10,22,12);scene.add(sun);
-
- box(100,.2,80,0x245c35,0,-.3,0);
- field=new THREE.Mesh(new THREE.PlaneGeometry(40,20),mat(0x258b43));
- field.rotation.x=-Math.PI/2;field.position.y=-.15;scene.add(field);
+ const sun=new THREE.DirectionalLight(0xffffff,1);sun.position.set(-8,18,10);scene.add(sun);
+ addBox(100,.2,70,0x285b35,0,-.3,0);
+ const grass=new THREE.Mesh(new THREE.PlaneGeometry(40,20),new THREE.MeshLambertMaterial({color:0x258a42}));
+ grass.rotation.x=-Math.PI/2;grass.position.y=-.15;scene.add(grass);
  for(let i=0;i<10;i++){
-  const stripe=new THREE.Mesh(new THREE.PlaneGeometry(4,20),new THREE.MeshBasicMaterial({color:i%2?0x278d43:0x23813e}));
+  const stripe=new THREE.Mesh(new THREE.PlaneGeometry(4,20),new THREE.MeshBasicMaterial({color:i%2?0x278b43:0x237e3c}));
   stripe.rotation.x=-Math.PI/2;stripe.position.set(-18+i*4,-.14,0);scene.add(stripe);
  }
  const white=0xffffff;
- line(40,.035,.035,white,0,.01,-10);
- line(40,.035,.035,white,0,.01,10);
- line(.035,.035,20,white,-20,.01,0);
- line(.035,.035,20,white,20,.01,0);
- line(.035,.035,20,white,0,.01,0);
- const circle=new THREE.Mesh(new THREE.RingGeometry(3.1,3.16,32),new THREE.MeshBasicMaterial({color:white,side:THREE.DoubleSide}));
- circle.rotation.x=-Math.PI/2;circle.position.y=.015;scene.add(circle);
+ addBox(40,.025,.035,white,0,0,-10);
+ addBox(40,.025,.035,white,0,0,10);
+ addBox(.035,.025,20,white,-20,0,0);
+ addBox(.035,.025,20,white,20,0,0);
+ addBox(.035,.025,20,white,0,0,0);
  for(const x of [-20,20]){
-  box(.25,2.4,7,0xffffff,x,1.2,0);
-  box(2.5,.2,.2,0xffffff,x+(x<0?1.25:-1.25),2.35,0);
-  box(.15,2.4,7,0xffffff,x+(x<0?2.5:-2.5),1.2,0);
+  addBox(.2,2.3,7,white,x,1.15,0);
+  addBox(2.5,.2,.2,white,x+(x<0?1.25:-1.25),2.3,0);
  }
- // Uzak tribünler: az sayıda büyük nesne
- for(const z of [-14,14]){
-  for(let i=0;i<3;i++)box(42,1.1,2.5,[0x354d60,0x526477,0x273a4c][i],0,1+i*1.2,z);
- }
- // Seyirci: tek InstancedMesh, çok düşük çizim çağrısı
- if(qualitySettings(currentQuality).crowd){
-  const geo=new THREE.BoxGeometry(.18,.28,.16);
-  const material=new THREE.MeshBasicMaterial({color:0xd7e2df});
-  const crowd=new THREE.InstancedMesh(geo,material,240);
-  const dummy=new THREE.Object3D();
-  for(let i=0;i<240;i++){
-   dummy.position.set((Math.random()-.5)*40,2.2+Math.random()*2,i%2?15:-15);
-   dummy.updateMatrix();crowd.setMatrixAt(i,dummy.matrix);
+ for(const z of [-14,14])for(let i=0;i<3;i++)
+  addBox(42,1,2,0x344d60,0,1+i*1.1,z);
+ if(profiles[quality].crowd){
+  const crowd=new THREE.InstancedMesh(new THREE.BoxGeometry(.16,.22,.15),new THREE.MeshBasicMaterial({color:0xd9e3df}),160);
+  const d=new THREE.Object3D();
+  for(let i=0;i<160;i++){
+   d.position.set((Math.random()-.5)*40,2+(i%4)*.25,i%2?15:-15);
+   d.updateMatrix();crowd.setMatrixAt(i,d.matrix);
   }
   scene.add(crowd);
  }
- players=[makePlayer(colors[0]),makePlayer(colors[1])];
- ball=new THREE.Mesh(new THREE.SphereGeometry(.32,10,8),mat(0xffffff));
- ball.position.set(0,.35,0);scene.add(ball);
- window.addEventListener('resize',resize);
- resize();
+ players=[makePlayer(0x2196ff),makePlayer(0xff5555)];
+ ball=new THREE.Mesh(new THREE.SphereGeometry(.32,10,8),new THREE.MeshLambertMaterial({color:0xffffff}));
+ ball.position.y=.35;scene.add(ball);
+ applyQuality();resize();
 }
 function resize(){
  if(!renderer)return;
  camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();
  renderer.setSize(innerWidth,innerHeight,false);
 }
-function updateWorld(data){
+function update(data){
  if(!data)return;
  lastState=data;
- const score=data.score||data.scores;
- if(score){
-  const a=Array.isArray(score)?score[0]:(score.home??score[0]??0);
-  const b=Array.isArray(score)?score[1]:(score.away??score[1]??0);
-  $('score').textContent=(a||0)+' - '+(b||0);
- }
- const list=Array.isArray(data.players)?data.players:Object.values(data.players||{});
- list.slice(0,2).forEach((p,i)=>{
-  if(!p)return;
-  const x=Number(p.x??p.position?.x??0);
-  const z=Number(p.z??p.y??p.position?.z??0);
-  players[i].position.set(x,0,z);
-  if(p.id===socket.id)myId=i;
+ const s=data.score||[0,0];
+ $('score').textContent=(s[0]||0)+' - '+(s[1]||0);
+ (data.players||[]).forEach((p,i)=>{
+  if(players[i])players[i].position.set(p.x||0,0,p.z||0);
  });
- const b=data.ball;
- if(b){
-  ball.position.set(Number(b.x??b.position?.x??0),Number(b.y??.35),Number(b.z??b.position?.z??0));
- }
- if(data.started!==undefined){
-  started=!!data.started;
-  $('controls').style.display=started?'block':'none';
- }
+ if(data.ball)ball.position.set(data.ball.x||0,.35,data.ball.z||0);
+ started=!!data.started;
+ $('controls').style.display=started?'block':'none';
 }
-function animate(now){
- requestAnimationFrame(animate);
- const target=qualitySettings(currentQuality).fps;
- if(now-lastRender<1000/target)return;
- const dt=Math.min(.05,(now-lastRender)/1000||.016);
- lastRender=now;
- if(started){
-  camera.position.x+=(players[myId??0].position.x-camera.position.x)*Math.min(1,dt*1.7);
-  camera.position.z+=(players[myId??0].position.z+24-camera.position.z)*Math.min(1,dt*1.7);
-  camera.lookAt(players[myId??0].position.x,0,players[myId??0].position.z);
- }
- renderer.render(scene,camera);
- frames++;
- if(now-lastFps>=1000){
-  fpsValue=Math.round(frames*1000/(now-lastFps));
-  $('fps').textContent=fpsValue;
-  frames=0;lastFps=now;
-  if($('quality').value==='auto'&&fpsValue<22&&adaptiveScale>.65){
-   adaptiveScale=Math.max(.65,adaptiveScale-.1);
-   applyQuality();
-  }else if($('quality').value==='auto'&&fpsValue>48&&adaptiveScale<1){
-   adaptiveScale=Math.min(1,adaptiveScale+.05);applyQuality();
+function loop(now){
+ requestAnimationFrame(loop);
+ const target=profiles[quality].fps;
+ if(now-lastFrame<1000/target)return;
+ lastFrame=now;renderer.render(scene,camera);frames++;
+ if(now-fpsTime>=1000){
+  const fps=Math.round(frames*1000/(now-fpsTime));
+  $('fps').textContent=fps;frames=0;fpsTime=now;
+  if($('quality').value==='auto'&&fps<22&&scale>.65){
+   scale=Math.max(.65,scale-.1);applyQuality();
   }
  }
+ if(started&&players.length){
+  camera.position.x+=(players[0].position.x-camera.position.x)*.025;
+  camera.position.z+=(players[0].position.z+24-camera.position.z)*.025;
+  camera.lookAt(players[0].position.x,0,players[0].position.z);
+ }
 }
-try{makeScene();requestAnimationFrame(animate)}
-catch(e){status('Grafik başlatılamadı: '+e.message)}
+try{init();requestAnimationFrame(loop)}catch(e){say('Grafik hatası: '+e.message)}
+window.addEventListener('resize',resize);
 
-function enterLandscape(){
- const el=document.documentElement;
- if(el.requestFullscreen)el.requestFullscreen().catch(()=>{});
- if(screen.orientation?.lock)screen.orientation.lock('landscape').catch(()=>{});
+function landscape(){
+ document.documentElement.requestFullscreen?.().catch(()=>{});
+ screen.orientation?.lock?.('landscape').catch(()=>{});
 }
-function showRoom(code){
- roomCode=code||roomCode;
- $('roomInfo').textContent=roomCode?'ODA KODU: '+roomCode:'Oda aranıyor...';
+function showRoom(info){
+ roomCode=info?.code||info?.roomCode||'';
+ $('roomInfo').textContent=roomCode?'ODA KODUN: '+roomCode:'Odaya bağlandın.';
  $('ready').style.display='block';
-}
-socket.on('connect',()=>{$('connection').textContent='Sunucu bağlı';status('Sunucuya bağlandın.')});
-socket.on('disconnect',()=>{$('connection').textContent='Bağlantı kesildi';status('Bağlantı bekleniyor...')});
-socket.on('joined',data=>{
- enterLandscape();
+ $('ready').disabled=false;
  $('menu').style.display='block';
- showRoom(typeof data==='string'?data:(data?.code||data?.roomCode||''));
- status('Odaya katıldın. Hazır olduğunda butona bas.');
-});
-socket.on('roomJoined',data=>showRoom(data?.code||data?.roomCode||''));
-socket.on('state',updateWorld);
-socket.on('gameState',updateWorld);
-socket.on('notice',status);
-socket.on('errorMessage',m=>{status(m);$('quick').disabled=false});
-socket.on('roomFull',()=>status('Oda dolu.'));
-socket.on('matchFound',data=>{showRoom(data?.code||'');status('Rakip bulundu!')});
-
-$('quick').onclick=()=>{
- enterLandscape();$('quick').disabled=true;status('Rakip aranıyor...');
- socket.emit('quickPlay');
-};
+}
+socket.on('connect',()=>{$('connection').textContent='Bağlı';say('Sunucu bağlantısı başarılı.')});
+socket.on('disconnect',()=>{$('connection').textContent='Bağlantı kesildi';say('Sunucu bağlantısı kesildi.')});
+socket.on('joined',showRoom);
+socket.on('roomJoined',showRoom);
+socket.on('state',update);
+socket.on('notice',say);
+socket.on('errorMessage',m=>{$('quick').disabled=false;say(m)});
+socket.on('matchFound',()=>say('Rakip bulundu! İkiniz de hazır olun.'));
 $('create').onclick=()=>{
- enterLandscape();status('Özel oda oluşturuluyor...');
+ landscape();say('Oda oluşturuluyor...');
  socket.emit('createRoom');
 };
 $('join').onclick=()=>{
- enterLandscape();
- const code=$('roomCode').value.trim();
- if(!code)return status('Önce oda kodunu yaz.');
- socket.emit('joinRoom',code);
+ landscape();
+ const c=$('roomCode').value.trim();
+ if(!/^\d{6}$/.test(c))return say('6 haneli oda kodu gir.');
+ say('Odaya katılınıyor...');
+ socket.emit('joinRoom',c);
+};
+$('quick').onclick=()=>{
+ landscape();$('quick').disabled=true;say('Rakip aranıyor...');
+ socket.emit('quickPlay');
 };
 $('ready').onclick=()=>{
- socket.emit('ready');$('ready').disabled=true;status('Hazır durumuna geçtin. Rakip bekleniyor...');
+ socket.emit('ready');$('ready').disabled=true;say('Hazır durumundasın. Rakip bekleniyor...');
 };
 $('shoot').onclick=()=>{if(started)socket.emit('action','shoot')};
 $('press').onclick=()=>{if(started)socket.emit('action','press')};
 
-// Joystick: olaylar dış daireye bağlandı.
 const base=$('stickBase'),knob=$('stick');
 let pointer=null;
-function joystick(e){
+function moveStick(e){
  const r=base.getBoundingClientRect();
- let x=e.clientX-(r.left+r.width/2);
- let y=e.clientY-(r.top+r.height/2);
- const max=37,len=Math.hypot(x,y);
- if(len>max){x=x/len*max;y=y/len*max}
+ let x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;
+ const n=Math.hypot(x,y),max=38;
+ if(n>max){x=x/n*max;y=y/n*max}
  knob.style.transform=`translate(${x}px,${y}px)`;
- move.x=x/max;move.z=y/max;
+ move={x:x/max,z:y/max};
 }
-function resetStick(){
- pointer=null;move={x:0,z:0};knob.style.transform='translate(0px,0px)';
-}
-base.addEventListener('pointerdown',e=>{
- pointer=e.pointerId;base.setPointerCapture(pointer);joystick(e);
-});
-base.addEventListener('pointermove',e=>{if(pointer===e.pointerId)joystick(e)});
-base.addEventListener('pointerup',resetStick);
-base.addEventListener('pointercancel',resetStick);
-base.addEventListener('lostpointercapture',resetStick);
-
-// Klavye desteği
-const keys={};
-window.addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);
-window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
-setInterval(()=>{
- if(!started)return;
- let x=move.x,z=move.z;
- if(keys.a||keys.arrowleft)x=-1;
- if(keys.d||keys.arrowright)x=1;
- if(keys.w||keys.arrowup)z=-1;
- if(keys.s||keys.arrowdown)z=1;
- socket.emit('input',{x,z});
-},50);
+function reset(){pointer=null;move={x:0,z:0};knob.style.transform='translate(0,0)'}
+base.addEventListener('pointerdown',e=>{pointer=e.pointerId;base.setPointerCapture(pointer);moveStick(e)});
+base.addEventListener('pointermove',e=>{if(pointer===e.pointerId)moveStick(e)});
+base.addEventListener('pointerup',reset);
+base.addEventListener('pointercancel',reset);
+base.addEventListener('lostpointercapture',reset);
+setInterval(()=>{if(started)socket.emit('input',move)},50);
 $('rotate').style.display=innerHeight>innerWidth?'flex':'none';
 window.addEventListener('resize',()=>$('rotate').style.display=innerHeight>innerWidth?'flex':'none');
-applyQuality();
 </script>
 </body>
 </html>

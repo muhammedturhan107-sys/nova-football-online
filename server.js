@@ -5,271 +5,234 @@ const crypto = require("crypto");
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
+const io = new Server(server, {
+  cors: { origin: "*" },
+  transports: ["websocket", "polling"]
+});
 
 app.use(express.static("public"));
-app.get("/health", (_, res) => res.json({ ok: true, game: "NOVA FOOTBALL ONLINE V3" }));
+app.get("/health", (req,res) => res.json({status:"online",version:"V6"}));
 
 const rooms = new Map();
+const socketRooms = new Map();
 
 function code() {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  let c;
+  do { c = String(100000 + crypto.randomInt(900000)); }
+  while (rooms.has(c));
+  return c;
 }
 
-function makeRoom() {
-  let id = code();
-  while (rooms.has(id)) id = code();
-
-  const room = {
-    id,
-    players: [],
-    started: false,
-    score: [0, 0],
-    ball: { x: 0, z: 0, vx: 0, vz: 0, owner: null },
-    goalFlash: 0
-  };
-  rooms.set(id, room);
-  return room;
+function sendError(socket, message) {
+  socket.emit("errorMessage", message);
+  socket.emit("notice", message);
 }
 
-function addPlayer(room, socket) {
-  if (room.players.length >= 2) return false;
-
-  const team = room.players.length;
-  room.players.push({
-    id: socket.id,
-    team,
-    x: team === 0 ? -5 : 5,
-    z: 0,
-    dx: 0,
-    dz: 0,
-    ready: false,
-    input: { x: 0, z: 0 },
-    lastAction: 0
-  });
-
-  socket.join(room.id);
-  socket.data.room = room.id;
-  socket.emit("joined", {
-    room: room.id,
-    team,
-    waiting: room.players.length < 2
-  });
-  sendState(room);
-  return true;
-}
-
-function sendState(room) {
-  io.to(room.id).emit("state", {
-    room: room.id,
+function state(room) {
+  return {
+    code: room.code,
     started: room.started,
-    score: room.score,
-    ball: room.ball,
+    score: [...room.score],
     players: room.players.map(p => ({
-      id: p.id,
-      team: p.team,
-      x: p.x,
-      z: p.z,
-      ready: p.ready
-    }))
-  });
+      id:p.id, x:p.x, z:p.z, ready:p.ready, team:p.team
+    })),
+    ball: {
+      x:room.ball.x, y:.35, z:room.ball.z,
+      owner:room.ball.owner
+    }
+  };
 }
 
-function removeFromRoom(socket) {
-  const id = socket.data.room;
-  if (!id) return;
-  const room = rooms.get(id);
+function broadcast(room) {
+  io.to(room.code).emit("state", state(room));
+}
+
+function leaveRoom(socket) {
+  const oldCode = socketRooms.get(socket.id);
+  if (!oldCode) return;
+  const room = rooms.get(oldCode);
+  socketRooms.delete(socket.id);
+  socket.leave(oldCode);
   if (!room) return;
 
   room.players = room.players.filter(p => p.id !== socket.id);
-  if (room.players.length === 0) {
-    rooms.delete(id);
-  } else {
-    room.started = false;
-    room.ball.owner = null;
-    room.ball.x = 0;
-    room.ball.z = 0;
-    room.ball.vx = 0;
-    room.ball.vz = 0;
-    room.players.forEach(p => {
-      p.ready = false;
-      p.input = { x: 0, z: 0 };
-    });
-    io.to(id).emit("notice", "Rakip ayrıldı. Yeni oyuncu bekleniyor.");
-    sendState(room);
+  room.started = false;
+  room.players.forEach(p => p.ready = false);
+
+  if (!room.players.length) rooms.delete(oldCode);
+  else {
+    io.to(oldCode).emit("notice","Oyuncu ayrıldı. Yeni oyuncu bekleniyor.");
+    broadcast(room);
   }
-  socket.data.room = null;
+}
+
+function createRoom(socket) {
+  leaveRoom(socket);
+  const c = code();
+  const room = {
+    code:c,
+    players:[],
+    started:false,
+    score:[0,0],
+    ball:{x:0,z:0,vx:0,vz:0,owner:null}
+  };
+  rooms.set(c,room);
+  addPlayer(socket,room);
+}
+
+function addPlayer(socket,room) {
+  if (room.players.length >= 2) {
+    sendError(socket,"Bu oda dolu.");
+    return;
+  }
+  leaveRoom(socket);
+  const p = {
+    id:socket.id,
+    x:room.players.length ? 5 : -5,
+    z:0,
+    ready:false,
+    team:room.players.length
+  };
+  room.players.push(p);
+  socket.join(room.code);
+  socketRooms.set(socket.id,room.code);
+
+  const info = {code:room.code,player:room.players.length};
+  socket.emit("joined",info);
+  socket.emit("roomJoined",info);
+  socket.emit("notice","Odaya katıldın. Maça hazır olduğunda butona bas.");
+  broadcast(room);
+}
+
+function joinRoom(socket,value) {
+  const c = String(
+    typeof value === "object" ? (value.code || value.roomCode || "") : value
+  ).trim();
+  const room = rooms.get(c);
+  if (!room) return sendError(socket,"Oda bulunamadı. Kodu kontrol et.");
+  if (room.started) return sendError(socket,"Bu maç zaten başlamış.");
+  if (room.players.length >= 2) return sendError(socket,"Oda dolu.");
+  addPlayer(socket,room);
+}
+
+function quickPlay(socket) {
+  let room = [...rooms.values()].find(r =>
+    !r.started && r.players.length === 1 && r.players[0].id !== socket.id
+  );
+  if (!room) {
+    createRoom(socket);
+    socket.emit("notice","Rakip aranıyor. Bir oyuncu daha bekleniyor.");
+  } else {
+    addPlayer(socket,room);
+    io.to(room.code).emit("notice","Rakip bulundu! İkiniz de hazır olun.");
+    io.to(room.code).emit("matchFound",{code:room.code});
+  }
 }
 
 io.on("connection", socket => {
-  socket.on("createRoom", () => {
-    removeFromRoom(socket);
-    const room = makeRoom();
-    addPlayer(room, socket);
-  });
+  socket.emit("notice","NOVA V6 sunucusuna bağlandın.");
 
-  socket.on("quickPlay", () => {
-    removeFromRoom(socket);
-    let room = [...rooms.values()].find(r => r.players.length === 1 && !r.started);
-    if (!room) room = makeRoom();
-    addPlayer(room, socket);
-  });
-
-  socket.on("joinRoom", raw => {
-    removeFromRoom(socket);
-    const id = String(raw || "").replace(/\D/g, "").slice(0, 6);
-    const room = rooms.get(id);
-
-    if (!room) {
-      socket.emit("errorMessage", "Bu oda bulunamadı. Oda kodunu kontrol et veya hızlı eşleşmeyi kullan.");
-      return;
-    }
-    if (room.players.length >= 2 || room.started) {
-      socket.emit("errorMessage", "Bu oda dolu veya oyun başlamış.");
-      return;
-    }
-    addPlayer(room, socket);
-  });
+  socket.on("createRoom", () => createRoom(socket));
+  socket.on("create_room", () => createRoom(socket));
+  socket.on("joinRoom", value => joinRoom(socket,value));
+  socket.on("join_room", value => joinRoom(socket,value));
+  socket.on("quickPlay", () => quickPlay(socket));
+  socket.on("quick_play", () => quickPlay(socket));
 
   socket.on("ready", () => {
-    const room = rooms.get(socket.data.room);
-    if (!room) return;
-    const player = room.players.find(p => p.id === socket.id);
-    if (!player) return;
-    player.ready = true;
-
-    if (room.players.length === 2 && room.players.every(p => p.ready)) {
+    const room = rooms.get(socketRooms.get(socket.id));
+    if (!room) return sendError(socket,"Önce bir odaya katıl.");
+    const p = room.players.find(x => x.id === socket.id);
+    if (!p) return;
+    p.ready = true;
+    if (room.players.length === 2 && room.players.every(x => x.ready)) {
       room.started = true;
-      room.ball.owner = null;
-      room.ball.x = 0;
-      room.ball.z = 0;
-      room.ball.vx = 0;
-      room.ball.vz = 0;
-      io.to(room.id).emit("notice", "MAÇ BAŞLADI!");
+      room.ball = {x:0,z:0,vx:0,vz:0,owner:null};
+      room.players.forEach((x,i) => {
+        x.x = i ? 5 : -5;
+        x.z = 0;
+      });
+      io.to(room.code).emit("notice","MAÇ BAŞLADI!");
     } else {
-      socket.emit("notice", "Hazırsın. Rakibin de hazır olunca maç başlayacak.");
+      socket.emit("notice","Hazırsın. Diğer oyuncu bekleniyor.");
     }
-    sendState(room);
+    broadcast(room);
   });
 
   socket.on("input", data => {
-    const room = rooms.get(socket.data.room);
+    const room = rooms.get(socketRooms.get(socket.id));
     if (!room || !room.started) return;
-    const p = room.players.find(v => v.id === socket.id);
+    const p = room.players.find(x => x.id === socket.id);
     if (!p) return;
-
     let x = Number(data?.x) || 0;
     let z = Number(data?.z) || 0;
-    const len = Math.hypot(x, z);
-    if (len > 1) { x /= len; z /= len; }
-
-    p.input = { x, z };
+    const len = Math.hypot(x,z);
+    if (len > 1) { x/=len; z/=len; }
+    p.x = Math.max(-18,Math.min(18,p.x+x*.42));
+    p.z = Math.max(-8,Math.min(8,p.z+z*.42));
   });
 
-  socket.on("action", type => {
-    const room = rooms.get(socket.data.room);
+  socket.on("action", action => {
+    const room = rooms.get(socketRooms.get(socket.id));
     if (!room || !room.started) return;
-    const p = room.players.find(v => v.id === socket.id);
+    const p = room.players.find(x => x.id === socket.id);
     if (!p) return;
-
-    const now = Date.now();
-    if (now - p.lastAction < 300) return;
-    p.lastAction = now;
-
     const b = room.ball;
-    const distance = Math.hypot(p.x - b.x, p.z - b.z);
+    const distance = Math.hypot(p.x-b.x,p.z-b.z);
 
-    if (type === "shoot" && b.owner === p.id) {
+    if (action === "shoot" && b.owner === socket.id) {
       b.owner = null;
-      const direction = p.team === 0 ? 1 : -1;
-      b.vx = direction * 0.85;
-      b.vz = (Math.random() - 0.5) * 0.22;
-      b.x = p.x + direction * 0.9;
-      b.z = p.z;
-    }
-
-    if (type === "press" && b.owner && b.owner !== p.id && distance < 2.3) {
-      const opponent = room.players.find(v => v.id === b.owner);
-      if (opponent && Math.hypot(p.x - opponent.x, p.z - opponent.z) < 2.5) {
-        b.owner = p.id;
-        b.vx = 0;
-        b.vz = 0;
-      }
+      b.vx = p.team === 0 ? 1.15 : -1.15;
+      b.vz = (Math.random()-.5)*.5;
+    } else if (action === "press" && distance < 2.7) {
+      b.owner = socket.id;
+      b.vx = b.vz = 0;
     }
   });
 
-  socket.on("disconnect", () => removeFromRoom(socket));
+  socket.on("disconnect", () => leaveRoom(socket));
 });
 
 setInterval(() => {
   for (const room of rooms.values()) {
     if (!room.started) continue;
-
     const b = room.ball;
 
-    for (const p of room.players) {
-      const input = p.input || { x: 0, z: 0 };
-      p.x += input.x * 0.17;
-      p.z += input.z * 0.17;
-      p.x = Math.max(-19, Math.min(19, p.x));
-      p.z = Math.max(-9, Math.min(9, p.z));
-    }
-
     if (b.owner) {
-      const owner = room.players.find(p => p.id === b.owner);
-      if (owner) {
-        const direction = owner.team === 0 ? 1 : -1;
-        b.x = owner.x + direction * 0.8;
-        b.z = owner.z;
-        b.vx = 0;
-        b.vz = 0;
-      } else {
-        b.owner = null;
-      }
+      const p = room.players.find(x => x.id === b.owner);
+      if (p) {
+        b.x = p.x + (p.team === 0 ? 1 : -1)*.65;
+        b.z = p.z;
+        b.vx = b.vz = 0;
+      } else b.owner = null;
     } else {
       b.x += b.vx;
       b.z += b.vz;
-      b.vx *= 0.985;
-      b.vz *= 0.985;
+      b.vx *= .985;
+      b.vz *= .985;
 
-      if (Math.abs(b.z) > 9) {
-        b.z = Math.sign(b.z) * 9;
-        b.vz *= -0.65;
-      }
-
-      if (Math.abs(b.vx) + Math.abs(b.vz) < 0.025) {
-        b.vx = 0;
-        b.vz = 0;
-      }
-
-      if (Math.abs(b.x) > 19 && Math.abs(b.z) < 3.2) {
-        if (b.x > 0) room.score[0]++;
-        else room.score[1]++;
-
-        io.to(room.id).emit("notice", "GOOOL!");
-        b.x = 0; b.z = 0; b.vx = 0; b.vz = 0; b.owner = null;
-
-        room.players.forEach(p => {
-          p.x = p.team === 0 ? -5 : 5;
-          p.z = 0;
-          p.input = { x: 0, z: 0 };
-        });
-      } else {
-        for (const p of room.players) {
-          if (Math.hypot(p.x - b.x, p.z - b.z) < 1.25) {
-            b.owner = p.id;
-            b.vx = 0;
-            b.vz = 0;
-            break;
-          }
+      for (const p of room.players) {
+        if (Math.hypot(p.x-b.x,p.z-b.z)<1.15) {
+          b.owner=p.id;
+          b.vx=b.vz=0;
+          break;
         }
       }
     }
-    sendState(room);
+
+    if (Math.abs(b.x)>20 && Math.abs(b.z)<3.6) {
+      const scorer = b.x>0 ? 0 : 1;
+      room.score[scorer]++;
+      b.x=b.z=b.vx=b.vz=0;
+      b.owner=null;
+      io.to(room.code).emit("notice","GOOOL! Skor güncellendi.");
+    } else {
+      b.x=Math.max(-21,Math.min(21,b.x));
+      b.z=Math.max(-10,Math.min(10,b.z));
+    }
+    broadcast(room);
   }
-}, 50);
+},50);
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, "0.0.0.0", () => {
-  console.log("NOVA FOOTBALL ONLINE V3 aktif: " + PORT);
-});
+server.listen(PORT,"0.0.0.0",()=>console.log("NOVA V6 running on "+PORT));
