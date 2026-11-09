@@ -3,32 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#07150e">
-<title>NOVA FOOTBALL ONLINE V7 FINAL</title>
+<meta name="theme-color" content="#07130f">
+<title>NOVA FOOTBALL ONLINE V7.1</title>
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07150e;color:white;font-family:Arial,sans-serif;touch-action:none}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07130f;color:white;font-family:Arial,sans-serif;touch-action:none}
 #game{position:fixed;inset:0}
-canvas{display:block}
-.panel{position:fixed;z-index:5;background:#07150ff2;border:1px solid #ffffff28;border-radius:18px;padding:18px;box-shadow:0 12px 45px #0009}
+canvas{display:block;width:100%;height:100%}
+.panel{position:fixed;z-index:5;background:#07150ff2;border:1px solid #ffffff30;border-radius:18px;padding:18px;box-shadow:0 15px 55px #0009;backdrop-filter:blur(12px)}
 #menu{width:min(92%,390px);left:50%;top:50%;transform:translate(-50%,-50%);text-align:center}
-.logo{font-size:29px;font-weight:1000;letter-spacing:2px;color:#70ffa0}
-.sub{font-size:12px;color:#a9c6b4;margin:9px 0 18px}
-button{border:0;border-radius:11px;padding:13px;background:#70ffa0;color:#07150e;font-weight:900;width:100%;margin:5px 0}
-.secondary{background:#203d2d;color:white;border:1px solid #ffffff28}
+.logo{font-size:29px;font-weight:1000;letter-spacing:2px;color:#79ffab;text-shadow:0 0 22px #36ff8b66}
+.sub{font-size:12px;color:#b2cbbb;margin:9px 0 18px}
+button{border:0;border-radius:11px;padding:13px;background:linear-gradient(135deg,#8cffb2,#3bdc79);color:#07150e;font-weight:900;width:100%;margin:5px 0}
+.secondary{background:#203b2c;color:white;border:1px solid #ffffff28}
 button:disabled{opacity:.5}
 input,select{width:100%;padding:13px;background:#10271b;color:white;border:1px solid #ffffff35;border-radius:10px;margin:5px 0}
 #top{position:fixed;z-index:3;top:10px;left:10px;right:10px;display:none;justify-content:space-between;gap:5px;pointer-events:none}
-.info{background:#06140eeb;border:1px solid #ffffff25;border-radius:10px;padding:9px;font-size:12px}
+.info{background:#06140eea;border:1px solid #ffffff30;border-radius:10px;padding:9px;font-size:12px;backdrop-filter:blur(8px)}
 #score{font-size:23px;font-weight:1000;color:#80ffa6}
 #settingsBtn{position:fixed;z-index:8;right:10px;top:10px;width:auto;background:#142b1d;color:white}
 #settings{display:none;right:10px;top:58px;width:min(270px,90vw)}
 #controls{display:none;position:fixed;z-index:4;inset:auto 0 15px}
-#stickBase{position:absolute;left:20px;bottom:5px;width:120px;height:120px;border-radius:50%;background:#ffffff20;border:2px solid #ffffff55;touch-action:none}
-#stick{position:absolute;left:34px;top:34px;width:48px;height:48px;border-radius:50%;background:#80ffa6}
+#stickBase{position:absolute;left:20px;bottom:5px;width:120px;height:120px;border-radius:50%;background:#ffffff22;border:2px solid #ffffff66;touch-action:none;box-shadow:0 5px 25px #0006}
+#stick{position:absolute;left:34px;top:34px;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#b8ffd0,#4be78b);box-shadow:0 3px 15px #0008}
 .actions{position:absolute;right:17px;bottom:9px;display:flex;gap:10px}
-.actions button{width:72px;height:72px;border-radius:50%;margin:0}
-#status{position:fixed;z-index:7;bottom:5px;left:50%;transform:translateX(-50%);background:#06140eeb;padding:8px 12px;border-radius:9px;font-size:12px;white-space:nowrap;max-width:95%;overflow:hidden}
+.actions button{width:72px;height:72px;border-radius:50%;margin:0;box-shadow:0 4px 20px #0008}
+#status{position:fixed;z-index:7;bottom:5px;left:50%;transform:translateX(-50%);background:#06140eef;padding:8px 12px;border-radius:9px;font-size:12px;white-space:nowrap;max-width:95%;overflow:hidden}
 #result{display:none;z-index:10;left:50%;top:50%;transform:translate(-50%,-50%);width:min(90%,350px);text-align:center}
 #result h1{color:#80ffa6}
 #roomInfo{color:#a5ffbd;font-weight:bold;margin:12px}
@@ -38,10 +38,10 @@ input,select{width:100%;padding:13px;background:#10271b;color:white;border:1px s
 </head>
 <body>
 <div id="game"></div>
-<div id="rotate">📱<br><br>En iyi deneyim için cihazını yatay çevir.</div>
+<div id="rotate">📱<br><br>En iyi futbol deneyimi için cihazını yatay çevir.</div>
 
 <div id="top">
- <div class="info">NOVA V7 FINAL<br><span id="connection">Bağlı</span></div>
+ <div class="info">NOVA V7.1<br><span id="connection">Bağlı</span></div>
  <div class="info" id="score">0 - 0</div>
  <div class="info">SÜRE<br><span id="timer">03:00</span></div>
  <div class="info">FPS <span id="fps">--</span></div>
@@ -49,13 +49,13 @@ input,select{width:100%;padding:13px;background:#10271b;color:white;border:1px s
 
 <button id="settingsBtn">⚙ Grafik</button>
 <div id="settings" class="panel">
- <b>GRAFİK AYARLARI</b>
+ <b>GRAFİK KALİTESİ</b>
  <select id="quality">
   <option value="auto">Otomatik</option>
-  <option value="lite">Lite</option>
+  <option value="lite">Lite – Eski cihazlar</option>
   <option value="balanced">Dengeli</option>
   <option value="high">Yüksek</option>
-  <option value="ultra">Ultra</option>
+  <option value="ultra">Ultra – Güçlü cihazlar</option>
  </select>
  <p id="qinfo" class="sub"></p>
  <button class="secondary" id="closeSettings">Kapat</button>
@@ -63,7 +63,7 @@ input,select{width:100%;padding:13px;background:#10271b;color:white;border:1px s
 
 <div id="menu" class="panel">
  <div class="logo">NOVA FOOTBALL</div>
- <div class="sub">ONLINE FOOTBALL EXPERIENCE · V7 FINAL</div>
+ <div class="sub">V7.1 GRAPHICS EDITION</div>
  <button id="quick">⚡ HIZLI EŞLEŞME</button>
  <button id="create" class="secondary">＋ ODA OLUŞTUR</button>
  <input id="roomCode" maxlength="6" inputmode="numeric" placeholder="6 HANELİ ODA KODU">
@@ -89,113 +89,408 @@ input,select{width:100%;padding:13px;background:#10271b;color:white;border:1px s
   <button id="shoot">ŞUT ⚽</button>
  </div>
 </div>
-<div id="status">NOVA V7 hazırlanıyor...</div>
+<div id="status">NOVA V7.1 yükleniyor...</div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
+
 const $=id=>document.getElementById(id);
 const socket=io();
-let scene,camera,renderer,ball,players=[];
-let started=false,finished=false,roomCode='';
+
+let scene,camera,renderer,ball,players=[],clock;
+let started=false,finished=false,roomJoined=false;
 let move={x:0,z:0},lastFrame=0,frames=0,fpsTime=performance.now();
-let quality='lite',scale=1,roomJoined=false;
+let quality='balanced',adaptiveScale=1;
+let playerId=0,roomCode='';
 const profiles={
- lite:{scale:.72,fps:30,crowd:false},
- balanced:{scale:.9,fps:40,crowd:false},
- high:{scale:1.1,fps:60,crowd:true},
- ultra:{scale:1.35,fps:60,crowd:true}
+ lite:{scale:.72,fps:30,shadows:false,crowd:100,detail:0},
+ balanced:{scale:.95,fps:40,shadows:false,crowd:240,detail:1},
+ high:{scale:1.15,fps:60,shadows:true,crowd:450,detail:2},
+ ultra:{scale:1.4,fps:60,shadows:true,crowd:700,detail:3}
 };
+
 function say(t){$('status').textContent=t}
+
 function autoQuality(){
  const ram=navigator.deviceMemory||2;
  const cores=navigator.hardwareConcurrency||4;
- return ram<=2||cores<=4?'lite':ram<=4?'balanced':'high';
+ const screenPixels=innerWidth*innerHeight;
+ if(ram<=2||cores<=4)return 'lite';
+ if(ram<=4||screenPixels<900000)return 'balanced';
+ if(ram>=8&&cores>=8)return 'ultra';
+ return 'high';
 }
+
 function applyQuality(){
  const selected=$('quality').value;
  quality=selected==='auto'?autoQuality():selected;
- if(renderer)renderer.setPixelRatio(Math.min(devicePixelRatio||1,profiles[quality].scale)*scale);
- $('qinfo').textContent=quality.toUpperCase()+' · '+profiles[quality].fps+' FPS hedefi';
- localStorage.setItem('novaV7Quality',selected);
+ const p=profiles[quality];
+ if(renderer){
+  renderer.setPixelRatio(Math.min(devicePixelRatio||1,p.scale)*adaptiveScale);
+  renderer.shadowMap.enabled=p.shadows;
+  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  if(scene){
+   const sun=scene.getObjectByName('mainSun');
+   if(sun){
+    sun.castShadow=p.shadows;
+    sun.shadow.mapSize.set(quality==='ultra'?2048:1024,quality==='ultra'?2048:1024);
+   }
+  }
+ }
+ $('qinfo').textContent=quality.toUpperCase()+' · '+p.fps+' FPS hedefi';
+ localStorage.setItem('novaV71Quality',selected);
 }
-$('quality').value=localStorage.getItem('novaV7Quality')||'auto';
+
+$('quality').value=localStorage.getItem('novaV71Quality')||'auto';
 $('settingsBtn').onclick=()=>$('settings').style.display=$('settings').style.display==='block'?'none':'block';
 $('closeSettings').onclick=()=>$('settings').style.display='none';
-$('quality').onchange=applyQuality;
+$('quality').onchange=()=>{applyQuality();say('Grafik ayarı değiştirildi. Sayfayı yenilemeden uygulanır.');};
 
-function box(w,h,d,color,x,y,z){
- const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshLambertMaterial({color}));
- m.position.set(x,y,z);scene.add(m);return m;
+function material(color,roughness=1,metalness=0){
+ return new THREE.MeshStandardMaterial({color,roughness,metalness});
 }
-function player(color){
+function addBox(w,h,d,color,x,y,z,mat=null){
+ const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat||material(color));
+ m.position.set(x,y,z);
+ scene.add(m);
+ return m;
+}
+function addLine(points,color=0xffffff,radius=.025){
+ const curve=new THREE.CatmullRomCurve3(points.map(p=>new THREE.Vector3(...p)));
+ const mesh=new THREE.Mesh(
+  new THREE.TubeGeometry(curve,Math.max(12,points.length*4),radius,5,false),
+  new THREE.MeshBasicMaterial({color})
+ );
+ scene.add(mesh);
+ return mesh;
+}
+
+function makeGrass(){
+ const geo=new THREE.PlaneGeometry(40,20,1,1);
+ const grass=new THREE.ShaderMaterial({
+  uniforms:{
+   time:{value:0},
+   dark:{value:new THREE.Color(0x176a31)},
+   light:{value:new THREE.Color(0x32984a)}
+  },
+  vertexShader:`
+   varying vec2 vUv;
+   void main(){
+    vUv=uv;
+    gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
+   }
+  `,
+  fragmentShader:`
+   varying vec2 vUv;
+   uniform vec3 dark;
+   uniform vec3 light;
+   void main(){
+    float stripe=mod(floor(vUv.x*10.0),2.0);
+    float grain=fract(sin(dot(vUv*1200.0,vec2(12.9898,78.233)))*43758.5453);
+    vec3 c=mix(dark,light,stripe*.55+.18);
+    c*=.96+grain*.055;
+    gl_FragColor=vec4(c,1.0);
+   }
+  `
+ });
+ const mesh=new THREE.Mesh(geo,grass);
+ mesh.rotation.x=-Math.PI/2;
+ mesh.position.y=-.13;
+ scene.add(mesh);
+}
+
+function makeField(){
+ addBox(100,.2,75,0x164329,0,-.35,0);
+ makeGrass();
+
+ const white=new THREE.MeshBasicMaterial({color:0xf1f5e9});
+ function fieldLine(w,d,x,z){
+  const m=new THREE.Mesh(new THREE.PlaneGeometry(w,d),white);
+  m.rotation.x=-Math.PI/2;
+  m.position.set(x,-.115,z);
+  scene.add(m);
+ }
+ fieldLine(40,.055,0,-10);
+ fieldLine(40,.055,0,10);
+ fieldLine(.055,20,-20,0);
+ fieldLine(.055,20,20,0);
+ fieldLine(.055,20,0,0);
+
+ const circle=new THREE.Mesh(
+  new THREE.RingGeometry(3.05,3.11,64),
+  new THREE.MeshBasicMaterial({color:0xffffff,side:THREE.DoubleSide})
+ );
+ circle.rotation.x=-Math.PI/2;
+ circle.position.y=-.105;
+ scene.add(circle);
+
+ const dot=new THREE.Mesh(new THREE.CircleGeometry(.12,16),white);
+ dot.rotation.x=-Math.PI/2;
+ dot.position.y=-.1;
+ scene.add(dot);
+
+ // Ceza sahaları
+ for(const side of [-1,1]){
+  fieldLine(6,.055,side*17,0);
+  fieldLine(.055,12,side*17,0);
+  fieldLine(6,.055,side*20,0);
+  fieldLine(.055,12,side*20,0);
+ }
+}
+
+function makeGoal(x,dir){
+ const white=material(0xf5f5f5,.5);
+ const frame=[
+  [x,0,-3.6],[x,2.5,-3.6],
+  [x,2.5,3.6],[x,0,3.6]
+ ];
+ addLine(frame,0xffffff,.095);
+ const netMat=new THREE.LineBasicMaterial({color:0xdce7dc,transparent:true,opacity:.55});
+ const positions=[];
+ const back=x+dir*1.5;
+ for(let z=-3.5;z<=3.51;z+=.5){
+  positions.push(x,0,z,back,0,z);
+  positions.push(x,2.45,z,back,2.45,z);
+ }
+ for(let y=0;y<=2.46;y+=.5){
+  positions.push(x,y,-3.5,x,y,3.5);
+  positions.push(back,y,-3.5,back,y,3.5);
+ }
+ const geo=new THREE.BufferGeometry();
+ geo.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
+ scene.add(new THREE.LineSegments(geo,netMat));
+}
+
+function makeStadium(){
+ const detail=profiles[quality].detail;
+ const seatColors=[0x263f54,0x344f67,0x455c70,0x263b50];
+
+ // Tribünler: az sayıda büyük geometrili katman
+ for(const z of [-1,1]){
+  for(let row=0;row<5;row++){
+   const y=2+row*1.35;
+   const depth=2.4;
+   const stand=addBox(45,1.15,depth,seatColors[row%4],0,y,z*(13+row*.65));
+   stand.rotation.x=z*.035;
+  }
+  addBox(47,.35,3,0x1c2936,0,9.2,z*17);
+  addBox(47,.22,1.2,0x8babbc,0,9.45,z*17);
+ }
+
+ // Yan tribünler
+ for(const x of [-1,1]){
+  for(let row=0;row<4;row++){
+   const stand=addBox(2.4,1.15,25,seatColors[row%4],x*(22+row*.65),2+row*1.25,0);
+   stand.rotation.z=-x*.035;
+  }
+ }
+
+ // Çatı kolonları ve çatı kirişleri
+ for(const z of [-1,1]){
+  for(let x=-20;x<=20;x+=10){
+   addBox(.25,8,.25,0x9aabb5,x,7,z*19);
+  }
+  addBox(46,.45,3.2,0x344b5b,0,11,z*19);
+  addBox(46,.12,.5,0x9fb7c1,0,11.3,z*19);
+ }
+
+ // Aydınlatma kuleleri
+ for(const x of [-1,1]){
+  for(const z of [-1,1]){
+   const px=x*22,pz=z*18;
+   addBox(.25,7,.25,0x566875,px,7,pz);
+   addBox(2,.25,.6,0xeaf5ff,px,10.5,pz);
+   const glow=new THREE.PointLight(0xd9efff,detail>=2?35:0,30,2);
+   glow.position.set(px,10,pz);
+   scene.add(glow);
+  }
+ }
+
+ // Kalabalık: tek InstancedMesh
+ const count=profiles[quality].crowd;
+ const crowdGeo=new THREE.CapsuleGeometry(.075,.13,2,4);
+ const crowdMat=new THREE.MeshStandardMaterial({color:0xffffff,roughness:1});
+ const crowd=new THREE.InstancedMesh(crowdGeo,crowdMat,count);
+ const dummy=new THREE.Object3D();
+ const palette=[0xd5e5ec,0xf0d7b8,0x91c9b2,0xe1a5a5,0x9caddb,0xe6df9c];
+ const colors=new THREE.Color();
+ for(let i=0;i<count;i++){
+  const side=i%4;
+  const a=(Math.random()-.5)*40;
+  const y=2+Math.random()*5;
+  let x,z;
+  if(side===0){x=a;z=14+Math.random()*3;}
+  else if(side===1){x=a;z=-14-Math.random()*3;}
+  else if(side===2){x=21+Math.random()*3;z=(Math.random()-.5)*25;}
+  else{x=-21-Math.random()*3;z=(Math.random()-.5)*25;}
+  dummy.position.set(x,y,z);
+  dummy.rotation.y=Math.random()*6.28;
+  dummy.scale.setScalar(.65+Math.random()*.6);
+  dummy.updateMatrix();
+  crowd.setMatrixAt(i,dummy.matrix);
+  colors.setHex(palette[Math.floor(Math.random()*palette.length)]);
+  crowd.setColorAt(i,colors);
+ }
+ scene.add(crowd);
+
+ // Reklam panoları
+ for(const z of [-11.5,11.5]){
+  addBox(40,.7,.12,0x122d3a,0,.45,z);
+  addBox(39,.035,.14,0x67f7a1,0,.85,z);
+ }
+}
+
+function makePlayer(color){
+ const group=new THREE.Group();
+ const jersey=material(color,.75);
+ const shorts=material(0x17232d);
+ const skin=material(0xe6b58e);
+ const socks=material(0xeceee9);
+ const boots=material(0x171c20,.55);
+
+ const body=new THREE.Mesh(new THREE.CapsuleGeometry(.34,.57,5,9),jersey);
+ body.position.y=1.08;body.castShadow=true;group.add(body);
+
+ const head=new THREE.Mesh(new THREE.SphereGeometry(.23,14,12),skin);
+ head.position.y=1.95;head.castShadow=true;group.add(head);
+
+ const hair=new THREE.Mesh(new THREE.SphereGeometry(.235,12,8,0,Math.PI*2,0,Math.PI*.48),material(0x28211d));
+ hair.position.y=2.04;group.add(hair);
+
+ const short=new THREE.Mesh(new THREE.BoxGeometry(.58,.32,.42),shorts);
+ short.position.y=.66;group.add(short);
+
+ for(const side of [-1,1]){
+  const arm=new THREE.Mesh(new THREE.CapsuleGeometry(.105,.43,4,7),jersey);
+  arm.position.set(side*.42,1.12,0);
+  arm.rotation.z=-side*.17;
+  group.add(arm);
+
+  const leg=new THREE.Mesh(new THREE.CapsuleGeometry(.115,.48,4,7),skin);
+  leg.position.set(side*.16,.28,0);
+  group.add(leg);
+
+  const sock=new THREE.Mesh(new THREE.CylinderGeometry(.11,.12,.3,8),socks);
+  sock.position.set(side*.16,.25,0);
+  group.add(sock);
+
+  const boot=new THREE.Mesh(new THREE.BoxGeometry(.18,.11,.32),boots);
+  boot.position.set(side*.16,.055,.07);
+  group.add(boot);
+ }
+ // Forma numarası
+ const number=new THREE.Mesh(
+  new THREE.PlaneGeometry(.2,.24),
+  new THREE.MeshBasicMaterial({color:0xffffff})
+ );
+ number.position.set(0,1.2,-.346);
+ group.add(number);
+
+ scene.add(group);
+ return group;
+}
+
+function makeBall(){
  const g=new THREE.Group();
- const body=new THREE.Mesh(new THREE.CapsuleGeometry(.32,.55,3,6),new THREE.MeshLambertMaterial({color}));
- body.position.y=.7;g.add(body);
- const head=new THREE.Mesh(new THREE.SphereGeometry(.2,8,6),new THREE.MeshLambertMaterial({color:0xffd2ad}));
- head.position.y=1.3;g.add(head);
- scene.add(g);return g;
+ const base=new THREE.Mesh(
+  new THREE.SphereGeometry(.32,24,18),
+  material(0xf6f6f0,.45)
+ );
+ g.add(base);
+
+ // Siyah desen panelleri
+ for(let i=0;i<5;i++){
+  const patch=new THREE.Mesh(
+   new THREE.CircleGeometry(.085,5),
+   new THREE.MeshBasicMaterial({color:0x17191a,side:THREE.DoubleSide})
+  );
+  const a=i*2.4;
+  patch.position.set(Math.sin(a)*.29,Math.cos(a)*.18,Math.cos(a)*.2);
+  patch.lookAt(patch.position.clone().multiplyScalar(2));
+  g.add(patch);
+ }
+ scene.add(g);
+ return g;
 }
+
 function init(){
  scene=new THREE.Scene();
- scene.background=new THREE.Color(0x8ab2c0);
- camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,110);
- camera.position.set(0,24,26);camera.lookAt(0,0,0);
- renderer=new THREE.WebGLRenderer({antialias:false,powerPreference:'low-power'});
+ scene.background=new THREE.Color(0x9bbdce);
+ scene.fog=new THREE.Fog(0x9bbdce,65,120);
+
+ camera=new THREE.PerspectiveCamera(53,innerWidth/innerHeight,.1,160);
+ camera.position.set(0,24,28);
+ camera.lookAt(0,0,0);
+
+ renderer=new THREE.WebGLRenderer({
+  antialias:true,
+  powerPreference:'high-performance',
+  alpha:false
+ });
+ renderer.outputColorSpace=THREE.SRGBColorSpace;
+ renderer.toneMapping=THREE.ACESFilmicToneMapping;
+ renderer.toneMappingExposure=1.12;
  renderer.shadowMap.enabled=false;
  $('game').appendChild(renderer.domElement);
- scene.add(new THREE.HemisphereLight(0xffffff,0x42634a,2));
- const sun=new THREE.DirectionalLight(0xffffff,1);sun.position.set(-8,18,10);scene.add(sun);
- box(100,.2,70,0x285b35,0,-.3,0);
- const grass=new THREE.Mesh(new THREE.PlaneGeometry(40,20),new THREE.MeshLambertMaterial({color:0x258a42}));
- grass.rotation.x=-Math.PI/2;grass.position.y=-.15;scene.add(grass);
- for(let i=0;i<10;i++){
-  const stripe=new THREE.Mesh(new THREE.PlaneGeometry(4,20),new THREE.MeshBasicMaterial({color:i%2?0x278b43:0x237e3c}));
-  stripe.rotation.x=-Math.PI/2;stripe.position.set(-18+i*4,-.14,0);scene.add(stripe);
- }
- const white=0xffffff;
- box(40,.025,.035,white,0,0,-10);box(40,.025,.035,white,0,0,10);
- box(.035,.025,20,white,-20,0,0);box(.035,.025,20,white,20,0,0);
- box(.035,.025,20,white,0,0,0);
- for(const x of [-20,20]){
-  box(.2,2.3,7,white,x,1.15,0);
-  box(2.5,.2,.2,white,x+(x<0?1.25:-1.25),2.3,0);
- }
- for(const z of [-14,14])for(let i=0;i<3;i++)box(42,1,2,0x344d60,0,1+i*1.1,z);
- if(profiles[quality].crowd){
-  const crowd=new THREE.InstancedMesh(
-   new THREE.BoxGeometry(.16,.22,.15),
-   new THREE.MeshBasicMaterial({color:0xd9e3df}),160
-  );
-  const d=new THREE.Object3D();
-  for(let i=0;i<160;i++){
-   d.position.set((Math.random()-.5)*40,2+(i%4)*.25,i%2?15:-15);
-   d.updateMatrix();crowd.setMatrixAt(i,d.matrix);
-  }
-  scene.add(crowd);
- }
- players=[player(0x2196ff),player(0xff5555)];
- ball=new THREE.Mesh(new THREE.SphereGeometry(.32,10,8),new THREE.MeshLambertMaterial({color:0xffffff}));
- ball.position.y=.35;scene.add(ball);
- applyQuality();resize();
+
+ scene.add(new THREE.HemisphereLight(0xdceeff,0x284d34,2.1));
+
+ const sun=new THREE.DirectionalLight(0xfff5df,2.1);
+ sun.name='mainSun';
+ sun.position.set(-18,35,15);
+ sun.castShadow=true;
+ sun.shadow.camera.left=-30;
+ sun.shadow.camera.right=30;
+ sun.shadow.camera.top=30;
+ sun.shadow.camera.bottom=-30;
+ sun.shadow.bias=-.00025;
+ scene.add(sun);
+
+ makeField();
+ makeStadium();
+ makeGoal(-20,-1);
+ makeGoal(20,1);
+
+ players=[
+  makePlayer(0x168aff),
+  makePlayer(0xe63f43)
+ ];
+ ball=makeBall();
+ ball.position.y=.35;
+
+ clock=new THREE.Clock();
+ applyQuality();
+ resize();
 }
+
 function resize(){
  if(!renderer)return;
- camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();
+ camera.aspect=innerWidth/innerHeight;
+ camera.updateProjectionMatrix();
  renderer.setSize(innerWidth,innerHeight,false);
 }
+
 function formatTime(v){
  const t=Math.max(0,Math.ceil(v));
  return String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0');
 }
+
 function update(data){
  if(!data)return;
  $('score').textContent=(data.score?.[0]||0)+' - '+(data.score?.[1]||0);
  $('timer').textContent=formatTime(data.remaining??180);
+
  (data.players||[]).forEach((p,i)=>{
-  if(players[i])players[i].position.set(p.x||0,0,p.z||0);
+  if(!players[i])return;
+  players[i].position.set(p.x||0,0,p.z||0);
+  players[i].rotation.y=p.team===0?Math.PI/2:-Math.PI/2;
  });
- if(data.ball)ball.position.set(data.ball.x||0,.35,data.ball.z||0);
+
+ if(data.ball){
+  ball.position.set(data.ball.x||0,.35,data.ball.z||0);
+  if(data.ball.owner)ball.rotation.x+=.03;
+ }
 
  started=!!data.started;
  finished=!!data.finished;
@@ -222,38 +517,60 @@ function update(data){
   }
  }
 }
-function loop(now){
- requestAnimationFrame(loop);
+
+function animate(now){
+ requestAnimationFrame(animate);
  if(!renderer)return;
- if(now-lastFrame<1000/profiles[quality].fps)return;
+ const target=profiles[quality].fps;
+ if(now-lastFrame<1000/target)return;
  lastFrame=now;
+
+ const dt=Math.min(.05,clock.getDelta());
+ if(started){
+  const p=players[playerId]||players[0];
+  camera.position.x+=(p.position.x-camera.position.x)*Math.min(1,dt*1.8);
+  camera.position.z+=(p.position.z+25-camera.position.z)*Math.min(1,dt*1.8);
+  camera.lookAt(p.position.x,0,p.position.z);
+ }
  renderer.render(scene,camera);
  frames++;
+
  if(now-fpsTime>=1000){
   const f=Math.round(frames*1000/(now-fpsTime));
   $('fps').textContent=f;
-  frames=0;fpsTime=now;
-  if($('quality').value==='auto'&&f<22&&scale>.65){
-   scale=Math.max(.65,scale-.1);applyQuality();
+  frames=0;
+  fpsTime=now;
+
+  if($('quality').value==='auto'){
+   if(f<24&&adaptiveScale>.65){
+    adaptiveScale=Math.max(.65,adaptiveScale-.1);
+    applyQuality();
+   }else if(f>52&&adaptiveScale<1){
+    adaptiveScale=Math.min(1,adaptiveScale+.05);
+    applyQuality();
+   }
   }
  }
- if(started){
-  camera.position.x+=(players[0].position.x-camera.position.x)*.025;
-  camera.position.z+=(players[0].position.z+24-camera.position.z)*.025;
-  camera.lookAt(players[0].position.x,0,players[0].position.z);
- }
 }
-try{init();requestAnimationFrame(loop)}
-catch(e){say('Grafik başlatılamadı: '+e.message)}
+
+try{
+ init();
+ requestAnimationFrame(animate);
+}catch(e){
+ say('Grafik başlatma hatası: '+e.message);
+}
+
 window.addEventListener('resize',resize);
 
 function landscape(){
  document.documentElement.requestFullscreen?.().catch(()=>{});
  screen.orientation?.lock?.('landscape').catch(()=>{});
 }
+
 function showRoom(info){
  roomJoined=true;
  roomCode=info?.code||info?.roomCode||'';
+ playerId=Math.max(0,(info?.player||1)-1);
  $('roomInfo').textContent=roomCode?'ODA KODUN: '+roomCode:'Odaya katıldın.';
  $('ready').style.display='block';
  $('ready').disabled=false;
@@ -261,6 +578,7 @@ function showRoom(info){
  $('result').style.display='none';
  say('Oda hazır. Arkadaşını bekle veya maça hazırlan.');
 }
+
 socket.on('connect',()=>{
  $('connection').textContent='Bağlı';
  say('Sunucu bağlantısı başarılı.');
@@ -281,7 +599,8 @@ socket.on('errorMessage',m=>{
 socket.on('matchFound',()=>say('Rakip bulundu! İkiniz de hazır olun.'));
 
 $('create').onclick=()=>{
- landscape();say('Oda oluşturuluyor...');
+ landscape();
+ say('Oda oluşturuluyor...');
  socket.emit('createRoom');
 };
 $('join').onclick=()=>{
@@ -305,12 +624,13 @@ $('ready').onclick=()=>{
 $('rematch').onclick=()=>{
  $('rematch').disabled=true;
  socket.emit('rematch');
- say('Rövanş isteği gönderildi. Rakibin bekleniyor.');
+ say('Rövanş isteği gönderildi.');
 };
 $('back').onclick=()=>{
  socket.emit('leaveRoom');
  roomJoined=false;
- finished=false;started=false;
+ finished=false;
+ started=false;
  $('result').style.display='none';
  $('menu').style.display='block';
  $('top').style.display='none';
@@ -324,7 +644,9 @@ $('shoot').onclick=()=>{if(started)socket.emit('action','shoot')};
 $('press').onclick=()=>{if(started)socket.emit('action','press')};
 $('exitBtn').onclick=()=>{
  socket.emit('leaveRoom');
- roomJoined=false;started=false;finished=false;
+ roomJoined=false;
+ started=false;
+ finished=false;
  $('controls').style.display='none';
  $('top').style.display='none';
  $('exitBtn').style.display='none';
@@ -346,19 +668,30 @@ function moveStick(e){
  move={x:x/max,z:y/max};
 }
 function reset(){
- pointer=null;move={x:0,z:0};
+ pointer=null;
+ move={x:0,z:0};
  knob.style.transform='translate(0,0)';
 }
 base.addEventListener('pointerdown',e=>{
- pointer=e.pointerId;base.setPointerCapture(pointer);moveStick(e);
+ pointer=e.pointerId;
+ base.setPointerCapture(pointer);
+ moveStick(e);
 });
-base.addEventListener('pointermove',e=>{if(pointer===e.pointerId)moveStick(e)});
+base.addEventListener('pointermove',e=>{
+ if(pointer===e.pointerId)moveStick(e);
+});
 base.addEventListener('pointerup',reset);
 base.addEventListener('pointercancel',reset);
 base.addEventListener('lostpointercapture',reset);
-setInterval(()=>{if(started)socket.emit('input',move)},50);
+
+setInterval(()=>{
+ if(started)socket.emit('input',move);
+},50);
+
 $('rotate').style.display=innerHeight>innerWidth?'flex':'none';
-window.addEventListener('resize',()=>$('rotate').style.display=innerHeight>innerWidth?'flex':'none');
+window.addEventListener('resize',()=>{
+ $('rotate').style.display=innerHeight>innerWidth?'flex':'none';
+});
 </script>
 </body>
 </html>
